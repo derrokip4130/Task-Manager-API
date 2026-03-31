@@ -8,7 +8,7 @@
 Production Base URL:
 
 ```text
-https://task-manager-452.up.railway.app/api/tasks
+https://task-manager-452.up.railway.app/api
 ```
 
 Quick test:
@@ -92,13 +92,13 @@ php artisan serve
 The app will be available at:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8000/api
 ```
 
 API base URL:
 
 ```text
-http://127.0.0.1:8000/api/tasks
+http://127.0.0.1:8000/api
 ```
 
 ---
@@ -115,12 +115,6 @@ This project can be deployed online using **Railway** with a **MySQL database**.
 
 ### 1) Push the project to GitHub
 Make sure your Laravel project is committed and pushed to a GitHub repository.
-
-```bash
-git add .
-git commit -m "prepare app for deployment"
-git push
-```
 
 ---
 
@@ -153,7 +147,7 @@ APP_NAME=TaskManager
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=base64:YOUR_APP_KEY_HERE
-APP_URL=https://task-manager-452.up.railway.app
+APP_URL=https://your-generated-domain.up.railway.app
 
 LOG_CHANNEL=stderr
 LOG_LEVEL=debug
@@ -205,7 +199,7 @@ After deployment, open the Railway shell and run:
 php artisan migrate
 ```
 
-This will create the database tables and populate sample task data for testing.
+This will create the database tables.
 
 ---
 
