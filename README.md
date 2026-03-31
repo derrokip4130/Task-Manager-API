@@ -198,7 +198,7 @@ php artisan serve --host=0.0.0.0 --port=$PORT
 
 ---
 
-### 6) Run database migrations and seeders
+### 6) Run database migrations
 After deployment, open the Railway shell and run:
 
 ```bash
@@ -274,20 +274,26 @@ POST /api/tasks
 
 ### Example Request
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/tasks" \
-  -H "Accept: application/json" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Complete Laravel assignment",
-    "due_date": "2026-04-01",
-    "priority": "high"
-  }'
+curl -X POST "http://127.0.0.1:8000/api/tasks" -H "Accept: application/json" -H "Content-Type: application/json" -d '{"title":"Review deployment logs","due_date":"2026-04-11","priority":"high"}'
 ```
 
 ### Rules
 - `title` cannot duplicate another task with the same `due_date`
 - `priority` must be `low`, `medium`, or `high`
 - `due_date` must be today or later
+
+### Example Response
+```json
+{
+    "title": "Test API route",
+    "priority": "high",
+    "due_date": "2026-04-09",
+    "status": "pending",
+    "updated_at": "2026-03-31T13:52:31.000000Z",
+    "created_at": "2026-03-31T13:52:31.000000Z",
+    "id": 10
+}
+```
 
 ---
 
@@ -300,14 +306,12 @@ GET /api/tasks
 
 ### Example Request
 ```bash
-curl -X GET "http://127.0.0.1:8000/api/tasks" \
-  -H "Accept: application/json"
+curl -X GET "http://127.0.0.1:8000/api/tasks" -H "Accept: application/json"
 ```
 
 ### Optional status filter
 ```bash
-curl -X GET "http://127.0.0.1:8000/api/tasks?status=pending" \
-  -H "Accept: application/json"
+curl -X GET "http://127.0.0.1:8000/api/tasks?status=pending" -H "Accept: application/json"
 ```
 
 ### Rules
@@ -315,6 +319,30 @@ curl -X GET "http://127.0.0.1:8000/api/tasks?status=pending" \
 - Then sorted by `due_date` ascending
 - Optional `status` query parameter
 - Returns meaningful JSON if no tasks exist
+
+### Example Response
+```json
+[
+    {
+        "id": 6,
+        "title": "Test API route",
+        "due_date": "2026-03-31",
+        "priority": "high",
+        "status": "pending",
+        "created_at": "2026-03-31T12:49:45.000000Z",
+        "updated_at": "2026-03-31T12:49:45.000000Z"
+    },
+    {
+        "id": 7,
+        "title": "Test API route",
+        "due_date": "2026-04-03",
+        "priority": "high",
+        "status": "pending",
+        "created_at": "2026-03-31T12:59:21.000000Z",
+        "updated_at": "2026-03-31T12:59:21.000000Z"
+    }
+]
+```
 
 ---
 
@@ -327,8 +355,7 @@ PATCH /api/tasks/{id}/status
 
 ### Example Request
 ```bash
-curl -X PATCH "http://127.0.0.1:8000/api/tasks/1/status" \
-  -H "Accept: application/json"
+curl -X PATCH "http://127.0.0.1:8000/api/tasks/1/status" -H "Accept: application/json"
 ```
 
 ### Rules
@@ -336,6 +363,22 @@ curl -X PATCH "http://127.0.0.1:8000/api/tasks/1/status" \
   - `pending → in_progress → done`
 - Cannot skip status
 - Cannot revert status
+
+### Example Response
+```json
+{
+    "message": "Task status updated successfully",
+    "data": {
+        "id": 1,
+        "title": "Test API route",
+        "due_date": "2026-03-31",
+        "priority": "high",
+        "status": "done",
+        "created_at": "2026-03-30T08:44:33.000000Z",
+        "updated_at": "2026-03-31T07:41:08.000000Z"
+    }
+}
+```
 
 ---
 
@@ -348,14 +391,27 @@ DELETE /api/tasks/{id}
 
 ### Example Request
 ```bash
-curl -X DELETE "http://127.0.0.1:8000/api/tasks/1" \
-  -H "Accept: application/json"
+curl -X DELETE "http://127.0.0.1:8000/api/tasks/1" -H "Accept: application/json"
 ```
 
 ### Rules
 - Only tasks with status `done` can be deleted
-- Otherwise returns `403 Forbidden`
+- Attempts to delete `pending` or `in_progress` tasks return `403 Forbidden`
 
+### Example Response
+#### Deleting a task that is pending or in progress 
+```json
+{
+    "message": "Only tasks with status done can be deleted"
+}
+```
+
+#### Deleting a task that is done 
+```json
+{
+    "message": "Task deleted successfully"
+}
+```
 ---
 
 ## 5) Daily Report
@@ -367,8 +423,7 @@ GET /api/tasks/report?date=YYYY-MM-DD
 
 ### Example Request
 ```bash
-curl -X GET "http://127.0.0.1:8000/api/tasks/report?date=2026-03-28" \
-  -H "Accept: application/json"
+curl -X GET "http://127.0.0.1:8000/api/tasks/report?date=2026-03-28" -H "Accept: application/json"
 ```
 
 ### Example Response
@@ -394,33 +449,3 @@ curl -X GET "http://127.0.0.1:8000/api/tasks/report?date=2026-03-28" \
   }
 }
 ```
-
----
-
-## 🧪 Testing
-
-Run automated tests using:
-
-```bash
-php artisan test
-```
-
----
-
-## 📌 Notes
-
-- Built with **Laravel 12**
-- Uses **MySQL**
-- API routes are defined in:
-
-```text
-routes/api.php
-```
-
-- If deploying to production, make sure:
-  - `APP_DEBUG=false`
-  - `APP_URL` is correct
-  - Database credentials are correct
-  - Migrations are run with `--force`
-
----
