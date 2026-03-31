@@ -8,8 +8,12 @@ class Task extends Model
 {
     protected $fillable = [
         'title',
-        'due_date',
         'priority',
         'status',
+        'due_date',
+    ];
+
+    protected $casts = [
+        'due_date' => 'date',
     ];
 }

@@ -6,5 +6,5 @@ use App\Http\Controllers\Api\TaskController;
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::get('/tasks', [TaskController::class, 'index']);
 Route::patch('/tasks/{id}/status', [TaskController::class, 'updateStatus']);
-Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
-Route::get('tasks/report', [TaskController::class, 'dailyReport']);
+Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+Route::get('/tasks/report', [TaskController::class, 'dailyReport']);

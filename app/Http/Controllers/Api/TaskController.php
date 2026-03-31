@@ -24,7 +24,7 @@ class TaskController extends Controller
             'due_date' => ['required', 'date', 'after_or_equal:' . Carbon::today()->toDateString()],
         ]);
 
-        $validated['status'] = $request->status ?? 'pending';
+        $validated['status'] = 'pending';
 
         $task = Task::create($validated);
 
@@ -34,7 +34,9 @@ class TaskController extends Controller
     // GET /api/tasks
     public function index(Request $request)
     {
-        $status = $request->query('status');
+        $status = $request->validate([
+                    'status' => ['nullable', Rule::in(['pending', 'in_progress', 'done'])],
+                ]);
 
         $tasksQuery = Task::query();
 
@@ -57,6 +59,7 @@ class TaskController extends Controller
 
         return response()->json($tasks, 200);
     }
+
     // PATCH /api/tasks/{id}/status
     public function updateStatus(Request $request, $id)
     {
@@ -111,6 +114,7 @@ class TaskController extends Controller
             'message' => 'Task deleted successfully'
         ], 200);
     }
+
     // GET /api/tasks/report?date=YYYY-MM-DD
     public function dailyReport(Request $request)
     {

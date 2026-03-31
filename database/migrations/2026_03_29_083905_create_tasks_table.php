@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending');
             $table->timestamps();
+            $table->unique(['title', 'due_date']);
         });
     }
 
