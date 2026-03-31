@@ -1,59 +1,426 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Manager API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌐 Live API
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Production Base URL:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```text
+https://task-manager-452.up.railway.app/api/tasks
+```
 
-## Learning Laravel
+Quick test:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```bash
+curl -X GET "https://task-manager-452.up.railway.app/api/tasks" \
+  -H "Accept: application/json"
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠 Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Laravel 12
+- PHP
+- MySQL
+- Railway (Deployment)
 
-### Premium Partners
+> This project uses **MySQL** both locally and in production.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🚀 How to Run Locally
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1) Clone the repository
+```bash
+git clone https://github.com/derrokip4130/Task-Manager-API
+cd task_manager
+```
 
-## Code of Conduct
+### 2) Install dependencies
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3) Set up environment variables
+Copy the example environment file and generate the app key:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4) Configure MySQL in `.env`
+Update your `.env` file with your MySQL credentials:
 
-## License
+```env
+APP_NAME=TaskManager
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=task_manager
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5) Create the database
+Create a MySQL database named `task_manager`.
+
+Example in MySQL:
+
+```sql
+CREATE DATABASE task_manager;
+```
+
+### 6) Run migrations
+```bash
+php artisan migrate
+```
+
+### 7) Start the development server
+```bash
+php artisan serve
+```
+
+The app will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+API base URL:
+
+```text
+http://127.0.0.1:8000/api/tasks
+```
+
+---
+
+## ☁️ How to Deploy
+
+You can deploy this Laravel API on **Railway**
+
+---
+
+## ☁️ Deploy on Railway
+
+This project can be deployed online using **Railway** with a **MySQL database**.
+
+### 1) Push the project to GitHub
+Make sure your Laravel project is committed and pushed to a GitHub repository.
+
+```bash
+git add .
+git commit -m "prepare app for deployment"
+git push
+```
+
+---
+
+### 2) Create a Railway project
+- Go to **Railway**
+- Click **New Project**
+- Choose **Deploy from GitHub Repo**
+- Select this repository
+
+Railway will automatically create a service for the Laravel app.
+
+---
+
+### 3) Add a MySQL database
+Inside the same Railway project:
+
+- Click **+ New**
+- Choose **Database**
+- Select **MySQL**
+
+Railway will create a MySQL service and automatically expose connection variables.
+
+---
+
+### 4) Add environment variables
+Open the **Laravel app service** → **Variables** and add:
+
+```env
+APP_NAME=TaskManager
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:YOUR_APP_KEY_HERE
+APP_URL=https://task-manager-452.up.railway.app
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_DATABASE=${{MySQL.MYSQLDATABASE}}
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+```
+
+Generate the Laravel app key locally using:
+
+```bash
+php artisan key:generate --show
+```
+
+Copy the output and paste it into:
+
+```env
+APP_KEY=
+```
+
+---
+
+### 5) Set the build and start commands
+
+#### Build Command
+In **Settings → Build Command**, set:
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+#### Start Command
+In **Settings → Start Command**, set:
+
+```bash
+php artisan serve --host=0.0.0.0 --port=$PORT
+```
+
+---
+
+### 6) Run database migrations and seeders
+After deployment, open the Railway shell and run:
+
+```bash
+php artisan migrate
+```
+
+This will create the database tables and populate sample task data for testing.
+
+---
+
+### 7) Generate a public domain
+In the Laravel service:
+
+- Open **Networking**
+- Click **Generate Domain**
+
+Railway will provide a public URL such as:
+
+```text
+https://task-manager-452.up.railway.app
+```
+
+Your live API base URL will then be:
+
+```text
+https://task-manager-452.up.railway.app/api/tasks
+```
+
+---
+
+### 8) Test the deployed API
+Example:
+
+```bash
+curl -X GET "https://task-manager-452.up.railway.app/api/tasks" \
+  -H "Accept: application/json"
+```
+
+Expected:
+- `200 OK`
+- JSON response containing tasks or a meaningful empty-state message
+
+---
+
+## 🔌 Example API Requests
+
+Base URL (local):
+
+```text
+http://127.0.0.1:8000/api
+```
+
+Base URL (production):
+
+```text
+https://task-manager-452.up.railway.app/api
+```
+
+You can test the API using:
+- cURL
+- Postman
+- Thunder Client
+- Insomnia
+
+---
+
+## 1) Create Task
+
+### Endpoint
+```http
+POST /api/tasks
+```
+
+### Example Request
+```bash
+curl -X POST "http://127.0.0.1:8000/api/tasks" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Complete Laravel assignment",
+    "due_date": "2026-04-01",
+    "priority": "high"
+  }'
+```
+
+### Rules
+- `title` cannot duplicate another task with the same `due_date`
+- `priority` must be `low`, `medium`, or `high`
+- `due_date` must be today or later
+
+---
+
+## 2) List Tasks
+
+### Endpoint
+```http
+GET /api/tasks
+```
+
+### Example Request
+```bash
+curl -X GET "http://127.0.0.1:8000/api/tasks" \
+  -H "Accept: application/json"
+```
+
+### Optional status filter
+```bash
+curl -X GET "http://127.0.0.1:8000/api/tasks?status=pending" \
+  -H "Accept: application/json"
+```
+
+### Rules
+- Sorted by priority: `high → medium → low`
+- Then sorted by `due_date` ascending
+- Optional `status` query parameter
+- Returns meaningful JSON if no tasks exist
+
+---
+
+## 3) Update Task Status
+
+### Endpoint
+```http
+PATCH /api/tasks/{id}/status
+```
+
+### Example Request
+```bash
+curl -X PATCH "http://127.0.0.1:8000/api/tasks/1/status" \
+  -H "Accept: application/json"
+```
+
+### Rules
+- Status progression only:
+  - `pending → in_progress → done`
+- Cannot skip status
+- Cannot revert status
+
+---
+
+## 4) Delete Task
+
+### Endpoint
+```http
+DELETE /api/tasks/{id}
+```
+
+### Example Request
+```bash
+curl -X DELETE "http://127.0.0.1:8000/api/tasks/1" \
+  -H "Accept: application/json"
+```
+
+### Rules
+- Only tasks with status `done` can be deleted
+- Otherwise returns `403 Forbidden`
+
+---
+
+## 5) Daily Report
+
+### Endpoint
+```http
+GET /api/tasks/report?date=YYYY-MM-DD
+```
+
+### Example Request
+```bash
+curl -X GET "http://127.0.0.1:8000/api/tasks/report?date=2026-03-28" \
+  -H "Accept: application/json"
+```
+
+### Example Response
+```json
+{
+  "date": "2026-03-28",
+  "summary": {
+    "high": {
+      "pending": 2,
+      "in_progress": 1,
+      "done": 0
+    },
+    "medium": {
+      "pending": 1,
+      "in_progress": 0,
+      "done": 3
+    },
+    "low": {
+      "pending": 0,
+      "in_progress": 0,
+      "done": 1
+    }
+  }
+}
+```
+
+---
+
+## 🧪 Testing
+
+Run automated tests using:
+
+```bash
+php artisan test
+```
+
+---
+
+## 📌 Notes
+
+- Built with **Laravel 12**
+- Uses **MySQL**
+- API routes are defined in:
+
+```text
+routes/api.php
+```
+
+- If deploying to production, make sure:
+  - `APP_DEBUG=false`
+  - `APP_URL` is correct
+  - Database credentials are correct
+  - Migrations are run with `--force`
+
+---
